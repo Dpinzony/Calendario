@@ -21,6 +21,8 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']],function(){
 
+Route::get('/contabilidad', [App\Http\Controllers\ContabilidadController::class, 'index']);
+
 Route::get('/Calendar', [App\Http\Controllers\CalendarController::class, 'index']);
 
 Route::post('/Calendar/mostrar', [App\Http\Controllers\CalendarController::class, 'show']);

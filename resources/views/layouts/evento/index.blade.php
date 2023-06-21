@@ -5,6 +5,58 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+  .container{
+    display:flex;
+    gap: 25px;
+    justify-content: flex-start;
+  }
+
+  #calendar{
+    height: 100%;
+    width: 100%;
+    gap: 10px;
+    margin: 15px;
+    border: 1px solid black;
+    background-color:white ;
+
+  }
+  .info{
+    display: grid;
+    width: 20%;
+    height: 100%;
+    grid-template-rows: 5% 95%;
+  }
+
+  .Task{
+    margin: 5px;
+    border: 1px solid black;
+    background-color: #d6d0ca;
+    width: 100%;
+    height: 92.5%;
+  }
+  .cuerpo{
+    width:40%;
+    display:grid;
+    
+  }
+
+  .Accounts{
+    margin: 10px;
+    width: 100%;
+    height: 5%;
+  }
+
+  .buttonAc{
+    border-radius: 10px;
+      padding: 10px 20px;
+      background-color: #f1f1f1;
+      border: none;
+      cursor: pointer;
+  }
+
+
+</style>
 <div class="container">
     
 <head>
@@ -13,26 +65,31 @@
     <script>
 
       document.addEventListener('DOMContentLoaded', function() {
-
+        
         let formulario = document.querySelector("#formularioEventos");
 
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
+          //initialView: 'dayGridMonth',
           locale:"es",
           displayEventTime: false,
           headerToolbar: {   
             right: 'prev,next today',
             center: 'title',
-            left: 'dayGridMonth,timeGridWeek,listWeek'
+            left: 'dayGridMonth'
           },
+
+          //event:booking,
           
           eventSources:{
             url: baseURL+"/Calendar/mostrar",
             method:"POST",
             extraParams:{
                 _token: formulario._token.value,
-            }
+            },
+              data: {
+              authenticated: {{ Auth::check() ? 'true' : 'false' }},
+            },
           },
 
           dateClick:function(info){
@@ -49,7 +106,7 @@
             var evento = info.event;
             console.log(evento);
 
-            axios.post("http://localhost/calendario/public/Calendar/editar/"+info.event.id).
+            axios.post(baseURL+"/calendario/public/Calendar/editar/"+info.event.id).
             then(
                 (respuesta)=>{
                     formulario.id.value= respuesta.data.id;
@@ -68,24 +125,24 @@
                     }
                 )
 
-          }
-
+          },
+          
 
         });
         calendar.render();
 
-        document.getElementById("btnGuardar").addEventListener('click',function(){
+            document.getElementById("btnGuardar").addEventListener('click',function(){
             enviarDatos("/Calendar/agregar");
             });
-        document.getElementById("btnEliminar").addEventListener('click',function(){
+            document.getElementById("btnEliminar").addEventListener('click',function(){
             enviarDatos("/Calendar/borrar/"+formulario.id.value);
             });
             document.getElementById("btnModificar").addEventListener('click',function(){
             enviarDatos("/Calendar/actualizar/"+formulario.id.value);
             });
 
-
         function enviarDatos(url){
+
             const datos= new FormData(formulario);
 
             const nuevaURL = baseURL+url
@@ -97,20 +154,53 @@
                 $('#evento').modal('hide');
             }).catch( error=>{ if(error.response){
                 console.log(error.response.data); 
-            }
-        }
-    )
+            }}
+          )};
 
-        }
+          var currentDate = new Date().toISOString().split('T')[0];
 
-        });
+// Filtrar las tareas del día actual
+var tasks = calendar.getEvents().filter(function(event) {
+  var eventDate = event.start.toISOString().split('T')[0];
+  return eventDate === currentDate;
+});
+
+// Mostrar las tareas en el div "taskID"
+var taskList = document.getElementById('taskID');
+taskList.innerHTML = '';
+tasks.forEach(function(task) {
+  var listItem = document.createElement('li');
+  listItem.textContent = task.title;
+  taskList.appendChild(listItem);
+});
+
+  });
 
 
     </script>
+
   </head>
-  <body>
-    <div id='calendar'></div>
+  <body style="background-color: #d9d9d9;">
+
+      <div class='cuerpo'>
+      <div class="Info">   
+          <div class='Accounts'>
+          <button onclick="window.location.href = 'http://localhost/calendario/public/contabilidad'">Ir a Contabilidad</button>
+          </div>
+        <div class='Task'>
+          <p><b>&#916 Task</b></p>
+          <script>
+          </script>
+          <ul id="taskID"></ul>
+        </div>
+      </div>
+      </div>
+
+      <div id='calendar' class="cal"></div>
+
+
   </body>
+
 
 </div>
 

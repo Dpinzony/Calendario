@@ -1,0 +1,60 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    width: 100%;
+    height: 100%;
+}
+
+.Container{
+    display: flex;
+    gap: 15px;
+}
+
+.Info{
+    display: grid;
+    width: 20%;
+    height: 100%;
+    grid-template-rows: 70% 30%;
+}
+
+.Task{
+    margin: 15px;
+    border: 1px solid black;
+    background-color: #d6d0ca;
+    width: 100%;
+    height: 100%;
+}
+
+.Today{
+    margin: 15px;
+    background-color: #d6d0ca;
+    width: 100%;
+    border: 1px solid black;
+    height: 100%;
+}
+
+.Texto{
+    display: grid;
+    width: 85%;
+    margin: 25px;
+    margin-bottom: 0px;
+    grid-template-rows: 20% 70% 10%;
+}
+
+.Title{
+    font-weight: bold;
+    font-size: 250%;
+    border: 1px solid black;
+    text-align: center;
+    background-color: #d6d0ca;
+    width: 100%;
+    height: 40%;
+}
+
+.Corpse{
+    margin: 5%;
+    text-align: justify;
+}
